@@ -1,0 +1,6 @@
+.DS_Store
+outputs/
+screenshots/
+spreadsheet_build/
+permission-workflow-prototype.bundle
+supabase-config.local.js

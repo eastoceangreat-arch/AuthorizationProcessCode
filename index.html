@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>权限申请与审批流程系统</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand"><span>AP</span><div><strong>权限治理</strong><small>Authorization Process</small></div></div>
+      <button class="nav active" data-page="dashboard">申请中心</button>
+      <button class="nav" data-page="request">权限申请</button>
+      <button class="nav" data-page="approval">审批处理</button>
+      <button class="nav" data-page="ledger">权限台账</button>
+      <button class="nav" data-page="rules">流程规则</button>
+      <label class="actor-label">当前身份<select id="actorSelect"></select></label>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><h1 id="pageTitle">申请中心</h1><p id="pageSubTitle">统一受理应用系统、BI、邮箱、共享盘和临时权限申请</p></div>
+        <div id="connectionBadge" class="badge muted">本地演示</div>
+      </header>
+
+      <section id="dashboard" class="page active">
+        <div class="metrics">
+          <article><small>处理中申请</small><strong id="metricOpen">0</strong><span>等待审批或执行</span></article>
+          <article><small>高风险申请</small><strong id="metricRisk">0</strong><span>L3-L5 风险等级</span></article>
+          <article><small>有效授权</small><strong id="metricGrant">0</strong><span>当前权限台账</span></article>
+          <article><small>审计日志</small><strong id="metricAudit">0</strong><span>全流程留痕</span></article>
+        </div>
+        <div class="grid two">
+          <section class="panel"><h2>待办申请</h2><div id="requestList" class="list"></div></section>
+          <section class="panel"><h2>风险分布</h2><div class="risk-bars"><div><span>BI报表</span><b style="--w:78%"></b></div><div><span>临时权限</span><b style="--w:54%"></b></div><div><span>应用系统</span><b style="--w:42%"></b></div></div></section>
+        </div>
+      </section>
+
+      <section id="request" class="page">
+        <form id="requestForm" class="panel form-grid">
+          <label>申请人<select id="requester"></select></label>
+          <label>申请类型<select id="requestType"><option value="new">新增权限</option><option value="change">变更权限</option><option value="extend">延期权限</option><option value="revoke">回收权限</option><option value="emergency">紧急权限</option></select></label>
+          <label>系统<select id="systemSelect"></select></label>
+          <label>权限资产<select id="assetSelect"></select></label>
+          <label>权限名称<input id="permissionName" required /></label>
+          <label>数据范围<input id="dataScope" required /></label>
+          <label>有效期<input id="expiresAt" type="date" /></label>
+          <label>是否需要导出<select id="needExport"><option value="false">否</option><option value="true">是</option></select></label>
+          <label class="wide">业务原因<textarea id="businessReason" required>岗位调整，需要查看负责区域经营数据并跟进渠道库存。</textarea></label>
+          <div class="actions wide"><button type="reset" class="secondary">重置</button><button type="submit" class="primary">提交申请</button></div>
+        </form>
+      </section>
+
+      <section id="approval" class="page">
+        <div class="grid two">
+          <section class="panel"><h2>审批队列</h2><div id="approvalQueue" class="list"></div></section>
+          <section class="panel"><h2>审批详情</h2><div id="approvalDetail" class="detail empty">请选择一条申请</div><textarea id="decisionComment" placeholder="填写审批意见"></textarea><div class="actions"><button id="rejectBtn" class="danger">驳回</button><button id="approveBtn" class="primary">同意</button></div></section>
+        </div>
+      </section>
+
+      <section id="ledger" class="page panel"><h2>权限台账</h2><div class="table-wrap"><table><thead><tr><th>人员</th><th>系统</th><th>权限</th><th>数据范围</th><th>风险</th><th>到期</th><th>状态</th></tr></thead><tbody id="grantRows"></tbody></table></div></section>
+
+      <section id="rules" class="page">
+        <div class="grid two">
+          <section class="panel"><h2>审批规则</h2><div id="ruleList" class="list"></div></section>
+          <section class="panel"><h2>规则原则</h2><ul class="principles"><li>最小权限：按岗位和数据范围授权。</li><li>高风险权限：增加 Data Owner、内控或 IT 审批。</li><li>临时权限：必须设置有效期，到期复核或回收。</li><li>全流程审计：申请、审批、授权、回收均留痕。</li></ul></section>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase-config.js"></script>
+    <script src="./supabase-config.local.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
